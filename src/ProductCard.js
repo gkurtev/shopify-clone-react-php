@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart, open } from './features/miniCartSlice';
 import { moneyFormat } from './helpers/helpers';
 import './ProductCard.css';
 export default function ProductCard({ product }) {
@@ -6,7 +8,7 @@ export default function ProductCard({ product }) {
     productId: product.id,
   });
   const [options, setOptions] = useState([]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     selectActiveVariant();
 
@@ -16,7 +18,8 @@ export default function ProductCard({ product }) {
   const addProduct = () => {
     if (!activeVariant.available) return;
 
-    alert(`Added product variant ${activeVariant.id}`);
+    dispatch(addToCart(activeVariant));
+    dispatch(open());
   };
   const renderColorSwatches = () => {
     if (~options.indexOf('Color')) {
