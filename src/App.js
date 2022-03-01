@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import Home from './Home';
+import Login from './Login';
+import RegisterForm from './RegisterForm';
+import ResetPassword from './ResetPassword';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import Account from './Account';
+import Tests from './Tests';
+import ConfirmPasswordReset from './ConfirmPasswordReset';
+import MiniCart from './MiniCart';
+import Header from './Header';
+import { Provider } from 'react-redux';
+import store from './app/store';
 
+const queryClient = new QueryClient();
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Header />
+
+          <div className='container'>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/register' element={<RegisterForm title='Register' />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/reset-password' element={<ResetPassword />} />
+              <Route path='/account' element={<Account />} />
+              <Route path='/tests' element={<Tests />} />
+              <Route path='/confirm-password-reset' element={<ConfirmPasswordReset />} />
+            </Routes>
+          </div>
+
+          <MiniCart />
+        </Router>
+        {/* <ReactQueryDevtools /> */}
+      </QueryClientProvider>
+    </Provider>
   );
 }
 

@@ -1,0 +1,102 @@
+[
+  {
+    "id": 44556,
+    "handle": "product-handle-0",
+    "title": "Product Title",
+    "options": [
+        {
+            "name": "Color"
+        }
+    ],
+    "price": "132",
+    "variants": [
+        {
+            "id": 451,
+            "title": "Red",
+            "price": "132",
+            "available": true
+        },
+        {
+            "id": 123,
+            "title": "Blue",
+            "price": "152",
+            "available": true
+        }
+    ]
+  },
+  {
+    "id": 44552,
+    "handle": "product-handle-1",
+    "title": "Product 2",
+    "options": [
+        {
+            "name": "Color"
+        }
+    ],
+    "price": "133",
+    "variants": [
+        {
+            "id": 3451,
+            "title": "Yellow",
+            "price": "133",
+            "available":false
+        },
+        {
+            "id": 12312,
+            "title": "Brown",
+            "price": "142",
+            "available": true
+        }
+    ]
+  },
+  {
+    "id": 445562828,
+    "handle": "product-handle-2",
+    "title": "Product 3",
+    "options": [
+        {
+            "name": "Color"
+        }
+    ],
+    "price": "132",
+    "variants": [
+        {
+            "id": 4513182,
+            "title": "Grey",
+            "price": "132",
+            "available": false
+        },
+        {
+            "id": 1231123,
+            "title": "Blue",
+            "price": "152.45",
+            "available": false
+        }
+    ]
+  },
+  {
+    "id": 4455628281,
+    "handle": "product-handle-3",
+    "title": "Product 4",
+    "options": [
+        {
+            "name": "Color"
+        }
+    ],
+    "price": "132.22",
+    "variants": [
+        {
+            "id": 45131821123,
+            "title": "Grey",
+            "price": "132.22",
+            "available": true
+        },
+        {
+            "id": 123112312,
+            "title": "Green",
+            "price": "140",
+            "available":  true
+        }
+    ]
+  }
+]
