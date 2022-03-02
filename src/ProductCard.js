@@ -6,6 +6,7 @@ import './ProductCard.css';
 export default function ProductCard({ product }) {
   const [activeVariant, setActiveVariant] = useState({
     productId: product.id,
+    productTitle: product.title,
   });
   const [options, setOptions] = useState([]);
   const dispatch = useDispatch();

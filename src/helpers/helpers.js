@@ -6,3 +6,9 @@ export const moneyFormat = (price) => {
 
   return formatter.format(price);
 };
+
+export const calculateCartCount = (arr) => {
+  return arr.reduce((sum, current) => {
+    return (sum += current.quantity);
+  }, 0);
+};

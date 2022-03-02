@@ -2,9 +2,12 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { open } from './features/miniCartSlice';
 import Navigation from './Navigation';
+import { useSelector } from 'react-redux';
+import { calculateCartCount } from './helpers/helpers';
 
 export default function Header() {
   const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.miniCart.cartItems);
 
   return (
     <div className='header bg-white mb-20 p-4'>
@@ -14,7 +17,9 @@ export default function Header() {
         </div>
 
         <div className='header__aside'>
-          <button onClick={() => dispatch(open())}>cart(0)</button>
+          <button onClick={() => dispatch(open())}>
+            cart({cartItems.length ? calculateCartCount(cartItems) : 0})
+          </button>
         </div>
       </div>
     </div>

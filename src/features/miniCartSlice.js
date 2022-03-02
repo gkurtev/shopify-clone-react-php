@@ -21,25 +21,37 @@ const miniCartSlice = createSlice({
       let fromIndex = -1;
       let prepareCartItem = {
         ...payload,
-        line: cart.length,
         quantity: 1,
       };
       const cartItemExists = cart.find((x) => x.id === payload.id);
 
       if (cartItemExists) {
         prepareCartItem.quantity = cartItemExists.quantity + 1;
-        prepareCartItem.line = cartItemExists.line;
         fromIndex = cart.findIndex((i) => i.id === payload.id);
         cart.splice(fromIndex, 1, prepareCartItem);
       }
 
       state.cartItems = cartItemExists ? cart : cart.concat(prepareCartItem);
-      Cookies.set('cart_session', JSON.stringify(state.cartItems));
+      Cookies.set('cart_session', JSON.stringify(state.cartItems, { expires: 7 }));
+    },
+
+    removeFromCart: (state, { payload }) => {
+      let cart = [...state.cartItems].filter((ci) => ci.id !== payload);
+      state.cartItems = cart;
+    },
+
+    updateQuantity: (state, { payload }) => {
+      let quantity = payload.quantity;
+      payload.type === 'increment' ? quantity++ : quantity--;
+
+      quantity <= 0
+        ? state.cartItems.splice(payload.index, 1)
+        : (state.cartItems[payload.index].quantity = quantity);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { open, close, addToCart } = miniCartSlice.actions;
+export const { open, close, addToCart, updateQuantity, removeFromCart } = miniCartSlice.actions;
 
 export default miniCartSlice.reducer;
