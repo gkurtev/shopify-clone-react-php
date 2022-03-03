@@ -5,17 +5,21 @@ include_once('../database/db-connect.php');
 
 // Create a collection
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $json = file_get_contents('php://input');
-  $collection = json_decode($json);
-  $action_type = $collection->action_type;
-  $name = $collection->name;
+  $action_type = $_POST['action_type'];
+  $name = $_POST['name'];
+  $image = NULL;
+
+  if (!empty($_FILES['file'])) {
+    $image = time() . $_FILES['file']['name'];
+  }
 
   if ($action_type === 'create') {
     $collectionHandle = slug($name);
-    $createCollection = "insert into collections (collection_handle, name, created_at) values ('$collectionHandle', '$name', NOW())";
+    $createCollection = "insert into collections (collection_handle, name, created_at, image) values ('$collectionHandle', '$name', NOW(), '$image')";
     $result = $connectDb->query($createCollection);
 
     if ($result) {
+      move_uploaded_file($_FILES['file']['tmp_name'], '../../../public/images/' . $image);
       echo json_encode(['status_code' => 201]);
     } else {
       echo json_encode(['status_code' => 404]);
@@ -35,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
     while ($row = $result->fetch_assoc()) {
       $collection['handle'] = $row['collection_handle'];
       $collection['title'] = $row['name'];
+      $collection['image'] = $row['image'];
       $collections[] = $collection;
     }
   }
@@ -44,13 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
 
 // Delete a collection
+// curl -X "DELETE" "http://localhost/my-app/src/backend/api/collections.php" -d '{"handle":"new-arrivals","image":"1646307416mojae-Overview-mobile.png"}
 if ($_SERVER['REQUEST_METHOD'] === "DELETE") {
-  parse_str(file_get_contents('php://input'), $_DELETE);
-  $handle = key($_DELETE);
+  $json = file_get_contents('php://input');
+  $data = json_decode($json);
+  $handle = $data->handle;
+  $image = $data->image;
   $deleteCollection = "delete from collections where collection_handle='$handle'";
   $result = $connectDb->query($deleteCollection);
 
   if ($result) {
+    $image ? unlink('../../../public/images/' . $image) : null;
+
     http_response_code(200);
     echo json_encode(['status_code' => 200]);
   } else {

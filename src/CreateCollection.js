@@ -1,11 +1,17 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { CSSTransition } from 'react-transition-group';
 
 export default function CreateCollection() {
   const action_type = 'create';
+
+  // use ref to clear file input value after submit
+  const imageRef = useRef();
+
+  // states
   const [name, setName] = useState('');
+  const [image, setImage] = useState('');
   const [valid, setValid] = useState(true);
   const [collections, setCollections] = useState([]);
 
@@ -17,10 +23,13 @@ export default function CreateCollection() {
 
   const { refetch } = useQuery('collections', fetchCollections);
 
-  const removeCollection = (handle) => {
+  const removeCollection = (handle, image) => {
     axios
       .delete('http://localhost/my-app/src/backend/api/collections.php', {
-        data: handle,
+        data: {
+          handle,
+          image,
+        },
       })
       .then(() => {
         const filteredCollections = collections.filter((c) => c.handle !== handle);
@@ -31,26 +40,42 @@ export default function CreateCollection() {
 
   const submitForm = (e) => {
     e.preventDefault();
-    const jsonObject = {
-      action_type,
-      name,
-    };
+    let bodyFormData = new FormData();
+
+    // create form data
+    bodyFormData.append('name', name);
+    bodyFormData.append('action_type', action_type);
+
+    // create image data if exists
+    if (image) bodyFormData.append('file', image);
+
     if (name.length <= 0) {
       setValid(false);
       return;
     } else {
-      createCollection(jsonObject).then((res) => {
+      createCollection(bodyFormData).then((res) => {
         setValid(res.status_code);
-        if (res.status_code === 201) refetch();
+
+        if (res.status_code === 201) {
+          // clear values
+          setName('');
+          setImage('');
+          imageRef.current.value = '';
+
+          // refetch query
+          refetch();
+        }
       });
     }
   };
 
   const createCollection = async (body) => {
-    const sanitizeBody = JSON.stringify(body);
     const { data } = await axios.post(
       'http://localhost/my-app/src/backend/api/collections.php',
-      sanitizeBody
+      body,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
     );
 
     return data;
@@ -88,6 +113,7 @@ export default function CreateCollection() {
                       type='text'
                       placeholder='Title'
                       name='collectionName'
+                      value={name}
                       onChange={(e) => setName(e.target.value)}
                       className={`appearance-none border-morder py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                       id='collectionName'
@@ -112,8 +138,10 @@ export default function CreateCollection() {
 
                     <input
                       type='file'
+                      ref={imageRef}
                       placeholder='Title'
                       name='collectionImage'
+                      onChange={(e) => setImage(e.target.files[0])}
                       className={`appearance-none border-morder py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                       id='collectionImage'
                     />
@@ -138,16 +166,19 @@ export default function CreateCollection() {
               return (
                 <li className='mb-3' key={c.handle}>
                   <div className='bg-white rounded-md px-4 py-3 shadow flex justify-between items-center'>
-                    <div>
-                      <a className='underline text-blue-500' href={`/collections/${c.handle}`}>
-                        {c.title}
-                      </a>
+                    <div className='flex items-center'>
+                      {c.image && <img src={`images/${c.image}`} className='w-20 h-20' alt='' />}
+                      <div className='ml-2'>
+                        <a className='underline text-blue-500' href={`/collections/${c.handle}`}>
+                          {c.title}
+                        </a>
+                      </div>
                     </div>
 
                     <button
                       className='btn bg-red-600'
                       onClick={() => {
-                        removeCollection(c.handle);
+                        removeCollection(c.handle, c.image);
                       }}
                     >
                       remove
