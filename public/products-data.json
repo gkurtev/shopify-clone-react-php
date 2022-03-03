@@ -5,22 +5,27 @@
     "title": "Product Title",
     "options": [
         {
-            "name": "Color"
+            "name": "Color",
+            "values": [
+                "Red",
+                "Blue"
+            ]
         }
     ],
-    "price": "132",
     "variants": [
         {
             "id": 451,
             "title": "Red",
-            "price": "132",
-            "available": true
+            "price": 132,
+            "available": true,
+            "quantity": 120
         },
         {
             "id": 123,
             "title": "Blue",
-            "price": "152",
-            "available": true
+            "price": 152,
+            "available": true,
+            "quantity": 120
         }
     ]
   },
@@ -30,22 +35,27 @@
     "title": "Product 2",
     "options": [
         {
-            "name": "Color"
+            "name": "Color",
+            "values": [
+                "Yellow",
+                "Brown"
+            ]
         }
     ],
-    "price": "133",
     "variants": [
         {
             "id": 3451,
             "title": "Yellow",
-            "price": "133",
-            "available":false
+            "price": 133,
+            "available":false,
+            "quantity": 120
         },
         {
             "id": 12312,
             "title": "Brown",
-            "price": "142",
-            "available": true
+            "price": 142,
+            "available": true,
+            "quantity": 120
         }
     ]
   },
@@ -55,22 +65,27 @@
     "title": "Product 3",
     "options": [
         {
-            "name": "Color"
+            "name": "Color",
+            "values": [
+                "Grey",
+                "Blue"
+            ]
         }
     ],
-    "price": "132",
     "variants": [
         {
             "id": 4513182,
             "title": "Grey",
-            "price": "132",
-            "available": false
+            "price": 132,
+            "available": false,
+            "quantity": 120
         },
         {
             "id": 1231123,
             "title": "Blue",
-            "price": "152.45",
-            "available": false
+            "price": 152.45,
+            "available": false,
+            "quantity": 120
         }
     ]
   },
@@ -80,22 +95,27 @@
     "title": "Product 4",
     "options": [
         {
-            "name": "Color"
+            "name": "Color",
+            "values": [
+                "Grey",
+                "Green"
+            ]
         }
     ],
-    "price": "132.22",
     "variants": [
         {
             "id": 45131821123,
             "title": "Grey",
-            "price": "132.22",
-            "available": true
+            "price": 132.22,
+            "available": true,
+            "quantity": 120
         },
         {
             "id": 123112312,
             "title": "Green",
-            "price": "140",
-            "available":  true
+            "price": 140,
+            "available":  true,
+            "quantity": 120
         }
     ]
   }

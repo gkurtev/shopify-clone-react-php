@@ -13,6 +13,7 @@ import MiniCart from './MiniCart';
 import Header from './Header';
 import { Provider } from 'react-redux';
 import store from './app/store';
+import AdminPage from './AdminPage';
 
 const queryClient = new QueryClient();
 function App() {
@@ -31,6 +32,7 @@ function App() {
               <Route path='/account' element={<Account />} />
               <Route path='/tests' element={<Tests />} />
               <Route path='/confirm-password-reset' element={<ConfirmPasswordReset />} />
+              <Route path='/admin' element={<AdminPage />} />
             </Routes>
           </div>
 

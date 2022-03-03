@@ -18,6 +18,13 @@ export default function Navigation() {
             Tests
           </NavLink>
         </li>
+
+        <li className='p-2'>
+          <NavLink className={({ isActive }) => (isActive ? 'underline' : '')} to='/admin'>
+            Admin
+          </NavLink>
+        </li>
+
         {logged ? (
           <li className='p-2'>
             <NavLink className={({ isActive }) => (isActive ? 'underline' : '')} to='/account'>
