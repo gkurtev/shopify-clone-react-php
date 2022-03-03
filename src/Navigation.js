@@ -13,11 +13,11 @@ export default function Navigation() {
           </NavLink>
         </li>
 
-        <li className='p-2'>
+        {/* <li className='p-2'>
           <NavLink className={({ isActive }) => (isActive ? 'underline' : '')} to='/tests'>
             Tests
           </NavLink>
-        </li>
+        </li> */}
 
         <li className='p-2'>
           <NavLink className={({ isActive }) => (isActive ? 'underline' : '')} to='/admin'>

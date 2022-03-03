@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-export default function UpateCollection({ collection, refetchData }) {
+export default function UpateCollection({ collection, refetchData, setShow }) {
   const handle = collection.handle;
   const action_type = 'update';
   const [name, setName] = useState(collection.title);
@@ -32,6 +32,7 @@ export default function UpateCollection({ collection, refetchData }) {
     updateCollection(formData).then((res) => {
       if (res.status_code === 201) {
         refetchData();
+        setShow(false);
       }
     });
   };

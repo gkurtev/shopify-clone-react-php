@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import CollectionItem from './CollectionItem';
 import UpateCollection from './UpateCollection';
 
 export default function CreateCollection() {
@@ -172,36 +173,11 @@ export default function CreateCollection() {
                 return (
                   <CSSTransition key={c.handle} timeout={500} classNames='item'>
                     <li className='mb-3'>
-                      <div className='bg-white rounded-md px-4 py-3 shadow flex justify-between items-center'>
-                        <div className='flex items-center'>
-                          {c.image && (
-                            <img src={`images/${c.image}`} className='w-20 h-20' alt='' />
-                          )}
-                          <div className='ml-2'>
-                            <a
-                              className='underline text-blue-500'
-                              href={`/collections/${c.handle}`}
-                            >
-                              {c.title}
-                            </a>
-                          </div>
-                        </div>
-                        <div className='flex items-center'>
-                          <button className='btn bg-yellow-600 mr-3' type='submit'>
-                            Update
-                          </button>
-                          <button
-                            className='btn bg-red-600'
-                            onClick={() => {
-                              removeCollection(c.handle, c.image);
-                            }}
-                          >
-                            remove
-                          </button>
-                        </div>
-                      </div>
-
-                      <UpateCollection collection={c} refetchData={handleUpate} />
+                      <CollectionItem
+                        collection={c}
+                        removeCollection={removeCollection}
+                        refetchData={handleUpate}
+                      />
                     </li>
                   </CSSTransition>
                 );
