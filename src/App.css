@@ -117,6 +117,10 @@ textarea {
     @apply border border-black border-solid;
   }
 
+  .input-field {
+    @apply appearance-none border-morder py-2 px-3 text-gray-700 leading-tight focus:outline-none bg-white;
+  }
+
   .border-morder-lg {
     @apply border-morder border-2;
   }

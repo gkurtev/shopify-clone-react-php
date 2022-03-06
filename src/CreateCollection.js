@@ -3,7 +3,6 @@ import React, { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import CollectionItem from './CollectionItem';
-import UpateCollection from './UpateCollection';
 
 export default function CreateCollection() {
   const action_type = 'create';
