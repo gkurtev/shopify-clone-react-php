@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { saveCollection, saveTitle } from './features/productAdminSlice';
@@ -19,8 +20,40 @@ export default function CreateProduct() {
 
   useEffect(() => {});
 
+  const saveProduct = () => {
+    const { product: productData } = product;
+    const formData = new FormData();
+
+    formData.append('title', productData.title);
+    formData.append(
+      'collection',
+      productData.collection === 'none' ? null : productData.collection
+    );
+    formData.append('action_type', 'create');
+    formData.append('variants', JSON.stringify(productData.variants));
+
+    if (productData.options) {
+      formData.append('options', JSON.stringify(productData.options));
+    }
+
+    dunkProduct(formData).then((res) => console.log(res));
+  };
+  const dunkProduct = async (body) => {
+    const { data } = await axios.post('http://localhost/my-app/src/backend/api/product.php', body, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    return data;
+  };
+
   return (
     <>
+      <div className='mb-5'>
+        <button className='btn bg-green-500' onClick={saveProduct}>
+          Save
+        </button>
+      </div>
+
       <div className='create-product'>
         <div className='create-product__head mb-5'>
           <h1>Product Creation</h1>

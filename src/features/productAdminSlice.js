@@ -6,12 +6,6 @@ const productAdminSlice = createSlice({
   initialState: {
     product: {
       title: '',
-      // options: [
-      //   {
-      //     name: '',
-      //     values: [],
-      //   },
-      // ],
       collection: 'none',
       variants: [
         {
