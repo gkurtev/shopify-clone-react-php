@@ -4,59 +4,66 @@ include_once('../helpers/helper-functions.php');
 include_once('../database/db-connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$action_type = $_POST['action_type'];
-	$product_title = $_POST['title'];
-	$product_collection = $_POST['collection'];
-	$product_handle = slug($product_title);
+  $action_type = $_POST['action_type'];
+  $product_title = $_POST['title'];
+  $product_collection = $_POST['collection'];
+  $product_handle = slug($product_title);
 
-	// Create product
-	// $createProduct = "insert into Products (collection_handle, handle, title, created_at) values ('$product_collection', '$product_handle' , '$product_title', NOW())";
+  // Create product
+  $createProduct = "insert into Products (collection_handle, handle, title, created_at) values ('$product_collection', '$product_handle' , '$product_title', NOW())";
 
-	// if ($product_collection === 'null') {
-	// 	$createProduct = "insert into Products ( handle, title, created_at) values ( '$product_handle' , '$product_title', NOW())";
-	// }
+  if ($product_collection === 'null') {
+    $createProduct = "insert into Products ( handle, title, created_at) values ( '$product_handle' , '$product_title', NOW())";
+  }
 
-	// $result = $connectDb->query($createProduct);
-	// $last_id = $connectDb->insert_id;
-	// Create Options
+  $createdProduct = $connectDb->query($createProduct);
+  $last_id = $connectDb->insert_id;
+  // Create Options
 
-	if ($_POST['options']) {
-		$options = json_decode($_POST['options'], true);
-		// echo '<pre>';
-		// var_dump($options);
-		// echo '</pre>';
-		$optionsString = '';
-		foreach ($options as $key => $value) {
-			# code...
-			// echo '<pre>';
-			// var_dump($options[$key]);
-			// echo '</pre>';
-			$optionsString .= $options[$key]['optionName'] . ' / ';
-		}
+  if ($_POST['options']) {
+    $options = json_decode($_POST['options'], true);
+    $optionsString = '';
 
-		echo '<pre>';
-		var_dump(preg_replace('/ \/ $/', '', $optionsString));
-		echo '</pre>';
+    foreach ($options as $key => $value) {
+      $optionsString .= $options[$key]['optionName'] . ' / ';
+    }
 
-		exit();
-	} else {
-		$variants = json_decode($_POST['variants'], true);
-		$title = $variants[0]['title'];
-		$quantity = empty($variants[0]['quantity']) ? 0 :  $variants[0]['quantity'];
-		$price = empty($variants[0]['price']) ? 0 : $variants[0]['price'];
+    $optionsSanitized = preg_replace('/ \/ $/', '', $optionsString);
+    $addOptions = "insert into ProductOptions (name) values('$optionsSanitized')";
+    $connectDb->query($addOptions);
+    $findAddedOption = "select option_id from ProductOptions where name='$optionsSanitized'";
+    $result = $connectDb->query($findAddedOption);
 
-		$addVariants = "insert into ProductVariants (product_id, title, price, quantity) values($last_id, '$title', '$price', '$quantity')";
+    if ($result->num_rows > 0) {
+      $option_id = $result->fetch_assoc()['option_id'];
+      $variants = json_decode($_POST['variants'], true);
+      $sql = '';
 
-		$result = $connectDb->query($addVariants);
-	}
+      foreach ($variants as $key => $value) {
+        $title = $variants[$key]['title'];
+        $price = $variants[$key]['price'] ? $variants[$key]['price'] : 0;
+        $quantity = $variants[$key]['quantity'] ? $variants[$key]['quantity'] : 0;
+        $sql .= "insert into productVariants (product_id, option_id, title, price, quantity) values ($last_id, $option_id, '$title', '$price', '$quantity');";
+      }
 
-	// Create Variants
-	// echo json_encode(['x' => $product_title, 'h' => $product_handle, 'c' => $product_collection]);
-	// exit();
+      if ($connectDb->multi_query($sql) === TRUE) {
+        echo 'success in adding variants';
+      } else {
+        echo 'failed to add variants';
+      }
+    }
+  } else {
+    $variants = json_decode($_POST['variants'], true);
+    $title = $variants[0]['title'];
+    $quantity = empty($variants[0]['quantity']) ? 0 :  $variants[0]['quantity'];
+    $price = empty($variants[0]['price']) ? 0 : $variants[0]['price'];
 
-	if ($result) {
-		echo json_decode($connectDb->insert_id);
-	} else {
-		echo 'fail';
-	}
+    $addVariants = "insert into ProductVariants (product_id, title, price, quantity) values($last_id, '$title', '$price', '$quantity')";
+  }
+
+  if ($createdProduct) {
+    echo json_encode(['product_created' => true]);
+  } else {
+    echo json_encode(['product_created' => false]);
+  }
 }

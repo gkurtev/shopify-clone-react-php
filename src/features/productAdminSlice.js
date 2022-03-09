@@ -41,14 +41,14 @@ const productAdminSlice = createSlice({
               state.product.options[1].values,
             ]).forEach((x, i) => {
               variantsArr[i] = {
-                title: x,
+                title: x[0],
                 price: state.product.variants[i] ? state.product.variants[i].price : '',
                 quantity: state.product.variants[i] ? state.product.variants[i].quantity : '',
               };
             });
           } else {
             variantsArr = state.product.options[0].values.map((opt, i) => ({
-              title: opt,
+              title: opt[0],
               price: state.product.variants[i] ? state.product.variants[i].price : '',
               quantity: state.product.variants[i] ? state.product.variants[i].quantity : '',
             }));
