@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveCollection, saveTitle } from './features/productAdminSlice';
@@ -16,8 +16,6 @@ export default function CreateProduct() {
   const { refetch } = useQuery('collections', () => {
     fetchCollections().then((res) => setCollections(res.collections));
   });
-
-  useEffect(() => {});
 
   const saveProduct = () => {
     const { product: productData } = product;
