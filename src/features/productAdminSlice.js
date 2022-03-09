@@ -48,7 +48,7 @@ const productAdminSlice = createSlice({
             });
           } else {
             variantsArr = state.product.options[0].values.map((opt, i) => ({
-              title: opt[0],
+              title: opt,
               price: state.product.variants[i] ? state.product.variants[i].price : '',
               quantity: state.product.variants[i] ? state.product.variants[i].quantity : '',
             }));
@@ -72,7 +72,6 @@ const productAdminSlice = createSlice({
     },
 
     saveCollection: (state, { payload }) => {
-      console.log(payload);
       state.product.collection = payload;
     },
   },

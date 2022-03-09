@@ -18,9 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $createdProduct = $connectDb->query($createProduct);
   $last_id = $connectDb->insert_id;
-  // Create Options
 
-  if ($_POST['options']) {
+  // Create Options
+  if (isset($_POST['options'])) {
     $options = json_decode($_POST['options'], true);
     $optionsString = '';
 
@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $findAddedOption = "select option_id from ProductOptions where name='$optionsSanitized'";
     $result = $connectDb->query($findAddedOption);
 
+    // Create variants when options
     if ($result->num_rows > 0) {
       $option_id = $result->fetch_assoc()['option_id'];
       $variants = json_decode($_POST['variants'], true);
@@ -43,22 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = $variants[$key]['title'];
         $price = $variants[$key]['price'] ? $variants[$key]['price'] : 0;
         $quantity = $variants[$key]['quantity'] ? $variants[$key]['quantity'] : 0;
-        $sql .= "insert into productVariants (product_id, option_id, title, price, quantity) values ($last_id, $option_id, '$title', '$price', '$quantity');";
+        $sql .= "insert into ProductVariants (product_id, option_id, title, price, quantity) values ($last_id, $option_id, '$title', '$price', '$quantity');";
       }
 
-      if ($connectDb->multi_query($sql) === TRUE) {
-        echo 'success in adding variants';
-      } else {
-        echo 'failed to add variants';
-      }
+      $connectDb->multi_query($sql);
     }
   } else {
+    // Create variants without options
     $variants = json_decode($_POST['variants'], true);
     $title = $variants[0]['title'];
     $quantity = empty($variants[0]['quantity']) ? 0 :  $variants[0]['quantity'];
     $price = empty($variants[0]['price']) ? 0 : $variants[0]['price'];
 
     $addVariants = "insert into ProductVariants (product_id, title, price, quantity) values($last_id, '$title', '$price', '$quantity')";
+
+    $connectDb->query($addVariants);
   }
 
   if ($createdProduct) {
