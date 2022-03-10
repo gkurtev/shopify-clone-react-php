@@ -68,22 +68,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-// Get all collections
 if ($_SERVER['REQUEST_METHOD'] === "GET") {
-  $getAllCollections = "select * from collections order by created_at desc";
-  $result = $connectDb->query($getAllCollections);
-  $collections = [];
+  // get all products from a single collection
+  if (isset($_GET['collection'])) {
+    $collection_handle = $_GET['collection'];
 
-  if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-      $collection['handle'] = $row['collection_handle'];
-      $collection['title'] = $row['name'];
-      $collection['image'] = $row['image'];
-      $collections[] = $collection;
+    $queryCollection = "select p.product_id, p.handle, p.title, p.collection_handle, pv.title as variant_title, pv.price, pv.quantity, pv.id, po.name
+    from Products as p
+    inner join collections as c on p.collection_handle = c.collection_handle
+    inner join ProductVariants as pv on p.product_id = pv.product_id
+    inner join ProductOptions as po on pv.option_id = po.option_id
+    where c.collection_handle = '$collection_handle'";
+
+    $collectionResult = $connectDb->query($queryCollection);
+    $productsArr = [];
+
+    if ($collectionResult->num_rows > 0) {
+      while ($row = $collectionResult->fetch_assoc()) {
+        $product = (object) [];
+        $product->handle = $row['handle'];
+        $product->title = $row['title'];
+        $product->collectionHandle = $row['collection_handle'];
+        $product->id = $row['product_id'];
+
+        // $pv_variant_title = $row['variant_title'];
+        // $pv_quantity = $row['quantity'];
+        // $pv_price = $row['price'];
+        // $pv_id = $row['id'];
+        // $po_name = $row['name'];
+
+        $productsArr[] = $product;
+      }
+
+      echo json_encode(['products' => $productsArr]);
+    } else {
+      echo 'fail to get collection';
     }
-  }
+  } else {
+    // Get all collections
+    $getAllCollections = "select * from collections order by created_at desc";
+    $result = $connectDb->query($getAllCollections);
+    $collections = [];
 
-  echo json_encode(['collections' => $collections]);
+    if ($result->num_rows > 0) {
+      while ($row = $result->fetch_assoc()) {
+        $collection['handle'] = $row['collection_handle'];
+        $collection['title'] = $row['name'];
+        $collection['image'] = $row['image'];
+        $collections[] = $collection;
+      }
+    }
+
+    echo json_encode(['collections' => $collections]);
+  }
 }
 
 
