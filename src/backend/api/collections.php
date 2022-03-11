@@ -85,19 +85,42 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
 
     if ($collectionResult->num_rows > 0) {
       while ($row = $collectionResult->fetch_assoc()) {
+        $index = null;
         $product = (object) [];
         $product->handle = $row['handle'];
         $product->title = $row['title'];
         $product->collectionHandle = $row['collection_handle'];
-        $product->id = $row['product_id'];
+        $product->id = (int) $row['product_id'];
 
-        // $pv_variant_title = $row['variant_title'];
-        // $pv_quantity = $row['quantity'];
-        // $pv_price = $row['price'];
-        // $pv_id = $row['id'];
-        // $po_name = $row['name'];
+        // product variants
+        $variantsObj = (object) [];
+        $variantsObj->title = $row['variant_title'];
+        $variantsObj->quantity = (int) $row['quantity'];
+        $variantsObj->price = (float) $row['price'];
+        $variantsObj->id = (int) $row['id'];
+        $product->variants[] = $variantsObj;
 
-        $productsArr[] = $product;
+        // product options
+        $optionsObj = (object) [];
+        $optionsObj->name = $row['name'];
+        $optionsObj->values[] = $row['variant_title'];
+        $product->options[] = $optionsObj;
+
+        if (count($productsArr) > 0) {
+          foreach ($productsArr as $key => $value) {
+            if ($productsArr[$key]->id === $product->id) {
+              $index = $key;
+              break;
+            }
+          }
+        }
+
+        if (is_null($index)) {
+          $productsArr[] = $product;
+        } else {
+          $productsArr[$index]->variants[] = $variantsObj;
+          $productsArr[$index]->options[0]->values[] = $row['variant_title'];
+        }
       }
 
       echo json_encode(['products' => $productsArr]);
