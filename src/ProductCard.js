@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
   }, []);
 
   const addProduct = () => {
-    if (!activeVariant.available) return;
+    if (activeVariant.quantity === 0) return;
 
     dispatch(addToCart(activeVariant));
     dispatch(open());
@@ -54,7 +54,7 @@ export default function ProductCard({ product }) {
     if (selected && variantId) {
       selectedVariant = product.variants.find((v) => v.id === variantId);
     } else {
-      selectedVariant = product.variants.find((v) => v.available);
+      selectedVariant = product.variants.find((v) => v.quantity > 0);
     }
 
     selectedVariant
@@ -70,7 +70,7 @@ export default function ProductCard({ product }) {
   return (
     <div className='product-card bg-white shadow'>
       <div className='product-card__media  relative'>
-        {!activeVariant?.available ? (
+        {activeVariant?.quantity === 0 ? (
           <span className='rounded-lg text-white absolute uppercase left-2 top-2 inline-block px-2 py-1 z-10 bg-red-600'>
             sold out
           </span>
@@ -97,7 +97,7 @@ export default function ProductCard({ product }) {
           <button
             onClick={addProduct}
             className={`inline-flex px-2 py-2 text-white bg-black uppercase text-sm rounded-lg ${
-              !activeVariant?.available ? 'disabled' : ''
+              activeVariant?.quantity === 0 ? 'disabled' : ''
             }`}
           >
             Add to bag

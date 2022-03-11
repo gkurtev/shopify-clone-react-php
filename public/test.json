@@ -1,0 +1,76 @@
+{
+    "products": [
+        {
+            "handle": "product-1",
+            "title": "Product 1",
+            "collectionHandle": "new-arrivals",
+            "id": 74,
+            "variants": [
+                {
+                    "title": "red",
+                    "quantity": 33,
+                    "price": 12,
+                    "id": 48
+                },
+                {
+                    "title": "green",
+                    "quantity": 4,
+                    "price": 15.5,
+                    "id": 49
+                },
+                {
+                    "title": "blue",
+                    "quantity": 0,
+                    "price": 0,
+                    "id": 50
+                }
+            ],
+            "options": [
+                {
+                    "name": "Color",
+                    "values": [
+                        "red",
+                        "green",
+                        "blue"
+                    ]
+                }
+            ]
+        },
+        {
+            "handle": "product-45",
+            "title": "Product 45",
+            "collectionHandle": "new-arrivals",
+            "id": 76,
+            "variants": [
+                {
+                    "title": "Green",
+                    "quantity": 4,
+                    "price": 12,
+                    "id": 54
+                },
+                {
+                    "title": "Black",
+                    "quantity": 0,
+                    "price": 0,
+                    "id": 55
+                },
+                {
+                    "title": "Yellow",
+                    "quantity": 2,
+                    "price": 551,
+                    "id": 56
+                }
+            ],
+            "options": [
+                {
+                    "name": "Color",
+                    "values": [
+                        "Green",
+                        "Black",
+                        "Yellow"
+                    ]
+                }
+            ]
+        }
+    ]
+}

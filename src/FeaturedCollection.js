@@ -3,13 +3,16 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import ProductCard from './ProductCard';
 
-export default function FeaturedCollection({ title }) {
+export default function FeaturedCollection({ title, collectionHandle }) {
   const [products, setProducts] = useState([]);
+
   const fetchData = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const { data } = await axios.get('products-data.json');
+    const { data } = await axios.get(
+      'http://localhost/my-app/src/backend/api/collections.php?collection=' + collectionHandle
+    );
 
-    setProducts(data);
+    setProducts(data.products);
     return data;
   };
 
